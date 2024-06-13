@@ -1,0 +1,55 @@
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+import matplotlib.patches as mpatches
+
+def create_industrial_flowchart_with_images():
+    fig, ax = plt.subplots(figsize=(14, 10))
+    ax.set_xlim(0, 12)
+    ax.set_ylim(0, 14)
+
+    # Steps and corresponding images
+    steps = [
+        ("Inicio", "https://via.placeholder.com/32x32.png?text=Inicio"),
+        ("Reunir ingredientes y materiales", "https://via.placeholder.com/32x32.png?text=Ing"),
+        ("Recepción y control de calidad de materias primas", "https://via.placeholder.com/32x32.png?text=CC"),
+        ("Preparación de extracto de cebolla", "https://via.placeholder.com/32x32.png?text=EC"),
+        ("Preparación de extracto de romero", "https://via.placeholder.com/32x32.png?text=ER"),
+        ("Formulación", "https://via.placeholder.com/32x32.png?text=F"),
+        ("Mezcla y homogenización", "https://via.placeholder.com/32x32.png?text=M"),
+        ("Filtración", "https://via.placeholder.com/32x32.png?text=F"),
+        ("Control de calidad del producto", "https://via.placeholder.com/32x32.png?text=CC"),
+        ("¿Calidad OK?", "https://via.placeholder.com/32x32.png?text=CC"),
+        ("Envasado", "https://via.placeholder.com/32x32.png?text=E"),
+        ("Almacenamiento y distribución", "https://via.placeholder.com/32x32.png?text=A"),
+        ("Fin", "https://via.placeholder.com/32x32.png?text=Fin")
+    ]
+
+    # Positions
+    y_positions = list(range(13, 0, -1))
+
+    # Draw steps with images
+    for i, ((step, img_url), y) in enumerate(zip(steps, y_positions)):
+        img = mpimg.imread(img_url)
+        imagebox = OffsetImage(img, zoom=0.5)
+        ab = AnnotationBbox(imagebox, (3.5, y), frameon=False)
+        ax.add_artist(ab)
+        box = mpatches.FancyBboxPatch((4, y - 0.5), 4, 1, boxstyle="round,pad=0.3", edgecolor='black', facecolor='lightblue')
+        ax.add_patch(box)
+        ax.text(6, y, step, ha='center', va='center', fontsize=10)
+
+    # Draw arrows
+    for i in range(len(steps) - 1):
+        ax.annotate('', xy=(6, y_positions[i + 1] + 0.5), xytext=(6, y_positions[i] - 0.5), arrowprops=dict(arrowstyle="->"))
+
+    # Draw decision box and arrows
+    decision_box = mpatches.FancyBboxPatch((8, y_positions[8] - 0.5), 4, 1, boxstyle="round,pad=0.3", edgecolor='black', facecolor='lightblue')
+    ax.add_patch(decision_box)
+    ax.text(10, y_positions[8], "Ajuste de formulación", ha='center', va='center', fontsize=10)
+    
+    ax.annotate('', xy=(8, y_positions[8]), xytext=(7, y_positions[8] - 0.5), arrowprops=dict(arrowstyle="->"))
+    ax.annotate('', xy=(7, y_positions[8] + 0.5), xytext=(6, y_positions[8]), arrowprops=dict(arrowstyle="->"))
+
+    ax.axis('off')
+    plt.show()
+
+create_industrial_flowchart_with_images()
